@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediksi Harga Mobil</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef; /* Light grey background */
+            margin: 40px auto;
+            padding: 30px;
+            max-width: 600px; /* Increased max width */
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* More prominent shadow */
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40; /* Dark grey title */
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #495057; /* Medium dark grey label */
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: calc(100% - 20px); /* Adjust width for padding */
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da; /* Light grey border */
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007bff; /* Blue focus border */
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+
+        button {
+            margin-top: 25px;
+            padding: 14px 24px;
+            width: 100%;
+            background-color: #007bff; /* Primary blue */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease; /* Smooth hover transition */
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745; /* Success green */
+            padding: 15px;
+            background-color: #f0fff4; /* Light green background for result */
+            border-radius: 8px;
+            border: 1px solid #c3e6cb; /* Light green border for result */
+        }
+    </style>
+</head>
+<body>
+    <h1>Prediksi Harga Mobil</h1>
+    <form id="predict-form">
+        <label for="horsepower">Horsepower:</label>
+        <input type="number" id="horsepower" required placeholder="Contoh: 200">
+
+        <label for="curbweight">Curb Weight:</label>
+        <input type="number" id="curbweight" required placeholder="Contoh: 1600">
+
+        <label for="enginesize">Engine Size:</label>
+        <input type="number" id="enginesize" required placeholder="Contoh: 150">
+
+        <button type="submit">Prediksi</button>
+    </form>
+
+    <div id="result">Prediksi harga mobil: -$9,295.67</div>
+
+    <script>
+        document.getElementById('predict-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const data = {
+                horsepower: parseFloat(document.getElementById('horsepower').value),
+                curbweight: parseFloat(document.getElementById('curbweight').value),
+                enginesize: parseFloat(document.getElementById('enginesize').value)
+            };
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            const formattedPrice = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(result.predicted_price);
+            document.getElementById('result').innerText = `Prediksi harga mobil: ${formattedPrice}`;
+        });
+
+        // Set initial values for demonstration
+        document.getElementById('horsepower').value = 200;
+        document.getElementById('curbweight').value = 1600;
+        document.getElementById('enginesize').value = 125;
+    </script>
+</body>
+</html>
